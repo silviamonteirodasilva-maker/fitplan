@@ -49,7 +49,7 @@ export function computeMetabolic(s: OnboardingState): MetabolicResult {
     s.activity.weekly_cardio_sessions *
     s.activity.avg_cardio_minutes *
     (CARDIO_INTENSITY[s.activity.cardio_intensity] ?? 8);
-  const yogaKcal = s.activity.weekly_yoga_sessions * 45 * 4;
+  const yogaKcal = s.activity.weekly_yoga_sessions * (s.activity.avg_yoga_minutes ?? 45) * 4;
   const dailyExerciseKcal = (liftingKcal + cardioKcal + yogaKcal) / 7;
 
   const tdee = Math.round(bmr * (jobMult + neatBonus) + dailyExerciseKcal);
