@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { ChefHat } from "lucide-react";
+import { LeafIcon } from "../components/LeafIcon";
 
 export function StepWelcome({ onNext }: { onNext: () => void }) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <main className="flex-1 flex flex-col items-center justify-center px-6 text-center max-w-md mx-auto">
         <div className="w-16 h-16 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center mb-8">
-          <ChefHat className="h-8 w-8" />
+          <LeafIcon className="h-8 w-8" />
         </div>
         <h1 className="text-4xl md:text-5xl font-display font-semibold leading-tight text-foreground">
           Your kitchen, your goals, your plan.
