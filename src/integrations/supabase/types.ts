@@ -62,6 +62,44 @@ export type Database = {
           },
         ]
       }
+      household_preferences: {
+        Row: {
+          cooking_sessions_per_week: number
+          cooking_style: string
+          household_id: string
+          id: string
+          max_fresh_cook_days: number
+          preferred_shopping_day: number | null
+          updated_at: string
+        }
+        Insert: {
+          cooking_sessions_per_week?: number
+          cooking_style?: string
+          household_id: string
+          id?: string
+          max_fresh_cook_days?: number
+          preferred_shopping_day?: number | null
+          updated_at?: string
+        }
+        Update: {
+          cooking_sessions_per_week?: number
+          cooking_style?: string
+          household_id?: string
+          id?: string
+          max_fresh_cook_days?: number
+          preferred_shopping_day?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "household_preferences_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: true
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       households: {
         Row: {
           created_at: string
@@ -391,6 +429,7 @@ export type Database = {
         Row: {
           avg_cardio_minutes: number
           avg_lifting_minutes: number
+          avg_yoga_minutes: number
           cardio_intensity: Database["public"]["Enums"]["cardio_intensity"]
           id: string
           job_type: Database["public"]["Enums"]["job_type"]
@@ -404,6 +443,7 @@ export type Database = {
         Insert: {
           avg_cardio_minutes?: number
           avg_lifting_minutes?: number
+          avg_yoga_minutes?: number
           cardio_intensity?: Database["public"]["Enums"]["cardio_intensity"]
           id?: string
           job_type?: Database["public"]["Enums"]["job_type"]
@@ -417,6 +457,7 @@ export type Database = {
         Update: {
           avg_cardio_minutes?: number
           avg_lifting_minutes?: number
+          avg_yoga_minutes?: number
           cardio_intensity?: Database["public"]["Enums"]["cardio_intensity"]
           id?: string
           job_type?: Database["public"]["Enums"]["job_type"]
@@ -622,6 +663,7 @@ export type Database = {
       }
       user_preferences: {
         Row: {
+          available_appliances: string[] | null
           cooking_skill: string | null
           dietary_restrictions: string[] | null
           disliked_ingredients: string[] | null
@@ -635,6 +677,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          available_appliances?: string[] | null
           cooking_skill?: string | null
           dietary_restrictions?: string[] | null
           disliked_ingredients?: string[] | null
@@ -648,6 +691,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          available_appliances?: string[] | null
           cooking_skill?: string | null
           dietary_restrictions?: string[] | null
           disliked_ingredients?: string[] | null
@@ -679,6 +723,7 @@ export type Database = {
           email: string | null
           household_id: string
           id: string
+          is_household_admin: boolean
           is_onboarded: boolean
           member_type: Database["public"]["Enums"]["member_type"]
           name: string
@@ -692,6 +737,7 @@ export type Database = {
           email?: string | null
           household_id: string
           id?: string
+          is_household_admin?: boolean
           is_onboarded?: boolean
           member_type?: Database["public"]["Enums"]["member_type"]
           name: string
@@ -705,6 +751,7 @@ export type Database = {
           email?: string | null
           household_id?: string
           id?: string
+          is_household_admin?: boolean
           is_onboarded?: boolean
           member_type?: Database["public"]["Enums"]["member_type"]
           name?: string
