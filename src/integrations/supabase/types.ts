@@ -870,6 +870,7 @@ export type Database = {
     }
     Functions: {
       current_user_household_id: { Args: never; Returns: string }
+      current_user_id: { Args: never; Returns: string }
     }
     Enums: {
       cardio_intensity: "low" | "moderate" | "high"
