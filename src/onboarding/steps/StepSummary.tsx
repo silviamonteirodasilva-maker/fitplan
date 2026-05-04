@@ -2,8 +2,9 @@ import { useState } from "react";
 import { StepShell } from "../components/StepShell";
 import { Button } from "@/components/ui/button";
 import { computeMetabolic } from "../engine/metabolic";
-import type { OnboardingState } from "../state";
+import type { OnboardingState, FitnessGoal } from "../state";
 import { Flame, Beef, Wheat, Droplet, ChevronDown } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 interface Props {
   state: OnboardingState;
@@ -13,6 +14,13 @@ interface Props {
   total: number;
 }
 
+const GOAL_PILL: Record<FitnessGoal, { label: string; cls: string }> = {
+  fat_loss:    { label: "Fat loss plan",       cls: "bg-accent text-accent-foreground" },
+  muscle_gain: { label: "Muscle gain plan",    cls: "bg-primary text-primary-foreground" },
+  recomp:      { label: "Recomposition plan",  cls: "bg-[hsl(210,30%,55%)] text-white" },
+  maintain:    { label: "Maintenance plan",    cls: "bg-muted text-foreground" },
+};
+
 export function StepSummary({ state, onNext, onBack, step, total }: Props) {
   const r = computeMetabolic(state);
   const [showMore, setShowMore] = useState(false);
@@ -21,6 +29,17 @@ export function StepSummary({ state, onNext, onBack, step, total }: Props) {
   planEnd.setDate(planEnd.getDate() + r.review_days);
   const planEndStr = planEnd.toLocaleDateString(undefined, { month: "long", day: "numeric" });
   const weeks = Math.round(r.review_days / 7);
+
+  // Macro pie data with kcal weighting
+  const proteinKcal = r.goal_protein_g * 4;
+  const carbsKcal = r.goal_carbs_g * 4;
+  const fatKcal = r.goal_fat_g * 9;
+  const totalKcal = proteinKcal + carbsKcal + fatKcal || 1;
+  const pieData = [
+    { name: "Protein", grams: r.goal_protein_g, kcal: proteinKcal, color: "hsl(var(--accent))" },
+    { name: "Carbs", grams: r.goal_carbs_g, kcal: carbsKcal, color: "hsl(40 80% 55%)" },
+    { name: "Fat", grams: r.goal_fat_g, kcal: fatKcal, color: "hsl(var(--primary-glow))" },
+  ];
 
   let explanation = "";
   if (r.goal === "fat_loss") {
@@ -34,6 +53,8 @@ export function StepSummary({ state, onNext, onBack, step, total }: Props) {
     explanation = `Your calories match your daily burn. Macros are set to support your training and keep energy stable.`;
   }
 
+  const pill = GOAL_PILL[r.goal];
+
   return (
     <StepShell
       step={step} total={total} onBack={onBack}
@@ -41,7 +62,10 @@ export function StepSummary({ state, onNext, onBack, step, total }: Props) {
       footer={<Button onClick={onNext} className="w-full h-14 text-base">This looks good, let's continue</Button>}
     >
       <div className="rounded-3xl bg-gradient-to-br from-primary to-[hsl(var(--primary-glow))] text-primary-foreground p-6 shadow-[var(--shadow-card)]">
-        <div className="text-sm opacity-80 uppercase tracking-wider">Daily calorie target</div>
+        <span className={`inline-flex items-center px-3 h-7 rounded-full text-xs font-semibold ${pill.cls}`}>
+          {pill.label}
+        </span>
+        <div className="text-sm opacity-80 uppercase tracking-wider mt-4">Daily calorie target</div>
         <div className="text-5xl font-display font-semibold mt-1 tabular-nums">
           {r.goal_calories.toLocaleString()} <span className="text-2xl opacity-80">kcal</span>
         </div>
@@ -77,12 +101,57 @@ export function StepSummary({ state, onNext, onBack, step, total }: Props) {
         Explain this more
         <ChevronDown className={`h-4 w-4 transition-transform ${showMore ? "rotate-180" : ""}`} />
       </button>
+
       {showMore && (
-        <div className="rounded-2xl bg-muted p-5 space-y-2 text-sm text-muted-foreground">
-          <div><b className="text-foreground">BMR:</b> {r.bmr} kcal — your body's base burn at rest, calculated using the {r.bmr_formula === "katch_mcardle" ? "Katch-McArdle" : "Mifflin-St Jeor"} formula.</div>
-          <div><b className="text-foreground">TDEE:</b> {r.tdee} kcal — your total daily burn including job, training, and movement.</div>
-          <div><b className="text-foreground">Macros:</b> protein scaled to your bodyweight; fat at ~27% of calories; carbs filling the remainder.</div>
-          <div><b className="text-foreground">Review date:</b> {planEndStr} — we'll check in and adjust based on your progress.</div>
+        <div className="rounded-2xl bg-card border border-border p-5 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+          <div>
+            <div className="font-display text-base font-semibold mb-2">Your macro split</div>
+            <div className="h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    dataKey="kcal"
+                    nameKey="name"
+                    cx="50%" cy="50%"
+                    innerRadius={50}
+                    outerRadius={85}
+                    paddingAngle={2}
+                    isAnimationActive
+                    animationDuration={600}
+                  >
+                    {pieData.map((entry) => (
+                      <Cell key={entry.name} fill={entry.color} stroke="none" />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value: any, _name, item: any) => {
+                      const pct = Math.round((Number(value) / totalKcal) * 100);
+                      return [`${item.payload.grams}g · ${pct}%`, item.payload.name];
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              {pieData.map((d) => {
+                const pct = Math.round((d.kcal / totalKcal) * 100);
+                return (
+                  <div key={d.name} className="flex flex-col items-center gap-1">
+                    <span className="inline-block w-3 h-3 rounded-full" style={{ backgroundColor: d.color }} />
+                    <div className="font-medium text-foreground">{d.name}</div>
+                    <div className="text-muted-foreground tabular-nums">{d.grams}g · {pct}%</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-border space-y-1.5 text-xs text-muted-foreground">
+            <div><span className="text-foreground font-medium">BMR:</span> {r.bmr} kcal — base burn at rest ({r.bmr_formula === "katch_mcardle" ? "Katch-McArdle" : "Mifflin-St Jeor"})</div>
+            <div><span className="text-foreground font-medium">TDEE:</span> {r.tdee} kcal — total daily burn including job, training, and movement</div>
+            <div><span className="text-foreground font-medium">Review date:</span> {planEndStr}</div>
+          </div>
         </div>
       )}
     </StepShell>
