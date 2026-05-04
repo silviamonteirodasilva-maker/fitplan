@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { ChefHat, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { LeafIcon } from "@/onboarding/components/LeafIcon";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const Index = () => {
     <main className="min-h-screen bg-background flex flex-col">
       <header className="px-6 py-4 flex justify-between items-center max-w-3xl mx-auto w-full">
         <div className="flex items-center gap-2 font-display font-semibold text-lg">
-          <ChefHat className="h-5 w-5 text-primary" /> Kitchen
+          <LeafIcon className="h-5 w-5 text-primary" /> Kitchen
         </div>
         <Button variant="ghost" size="sm" onClick={async () => { await supabase.auth.signOut(); navigate("/auth"); }}>
           <LogOut className="h-4 w-4 mr-1.5" /> Sign out

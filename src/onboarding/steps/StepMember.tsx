@@ -25,11 +25,12 @@ export function StepMember({ idx, total, member, onChange, onNext, onBack, step,
     return false;
   })();
 
+  const title = member.name.trim() ? `Add ${member.name.trim()} to your household` : "Who else lives with you?";
   return (
     <StepShell
       step={step} total={totalSteps} onBack={onBack}
-      title={`Person ${idx + 2} of ${total + 1}`}
-      subtitle="Who else is in the household?"
+      title={title}
+      subtitle={`You're setting up a profile for another person, not yourself. Person ${idx + 2} of ${total + 1}.`}
       footer={<Button onClick={onNext} disabled={!valid} className="w-full h-14 text-base">{isLast ? "Continue" : "Next person"}</Button>}
     >
       <div className="space-y-3">
