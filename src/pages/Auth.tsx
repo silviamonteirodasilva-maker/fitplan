@@ -13,6 +13,11 @@ export default function Auth() {
     params.get("mode") === "signin" ? "signin" : "signup"
   );
   useEffect(() => {
+    if (localStorage.getItem("hasSeenWelcome") !== "true") {
+      navigate("/welcome", { replace: true });
+    }
+  }, [navigate]);
+  useEffect(() => {
     const m = params.get("mode");
     if (m === "signin" || m === "signup") setMode(m);
   }, [params]);
