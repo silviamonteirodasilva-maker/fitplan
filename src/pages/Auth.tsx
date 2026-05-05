@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,19 @@ import { toast } from "sonner";
 
 export default function Auth() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signup");
+  const [params] = useSearchParams();
+  const [mode, setMode] = useState<"signin" | "signup">(
+    params.get("mode") === "signin" ? "signin" : "signup"
+  );
+  useEffect(() => {
+    if (localStorage.getItem("hasSeenWelcome") !== "true") {
+      navigate("/welcome", { replace: true });
+    }
+  }, [navigate]);
+  useEffect(() => {
+    const m = params.get("mode");
+    if (m === "signin" || m === "signup") setMode(m);
+  }, [params]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);

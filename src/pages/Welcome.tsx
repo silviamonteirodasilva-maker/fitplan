@@ -1,0 +1,139 @@
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { LeafIcon } from "@/onboarding/components/LeafIcon";
+
+const slides = [
+  {
+    title: "Eat well all week.",
+    body: "A meal plan that fits your household, your schedule, and your goals — without the mental load.",
+    art: (
+      <svg viewBox="0 0 200 200" className="w-56 h-56" fill="none">
+        <circle cx="100" cy="110" r="60" fill="hsl(var(--secondary))" />
+        <ellipse cx="100" cy="125" rx="55" ry="18" fill="hsl(var(--accent) / 0.25)" />
+        <path d="M55 110 Q100 80 145 110" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" />
+        <circle cx="80" cy="100" r="6" fill="hsl(var(--accent))" />
+        <circle cx="115" cy="95" r="5" fill="hsl(var(--primary))" />
+        <circle cx="125" cy="105" r="4" fill="hsl(var(--accent))" />
+      </svg>
+    ),
+  },
+  {
+    title: "One kitchen, different goals.",
+    body: "Everyone eats the same meals. Portions adjust automatically to each person's targets.",
+    art: (
+      <svg viewBox="0 0 200 200" className="w-56 h-56" fill="none">
+        <circle cx="70" cy="80" r="22" fill="hsl(var(--primary))" />
+        <circle cx="130" cy="80" r="22" fill="hsl(var(--accent))" />
+        <rect x="45" y="105" width="50" height="55" rx="14" fill="hsl(var(--primary))" />
+        <rect x="105" y="105" width="50" height="55" rx="14" fill="hsl(var(--accent))" />
+      </svg>
+    ),
+  },
+  {
+    title: "Cook once, eat for days.",
+    body: "Smart batch cooking means fewer sessions, less waste, and a shopping list that's always accurate.",
+    art: (
+      <svg viewBox="0 0 200 200" className="w-56 h-56" fill="none">
+        <rect x="40" y="80" width="120" height="80" rx="14" fill="hsl(var(--secondary))" />
+        <rect x="40" y="80" width="120" height="20" rx="6" fill="hsl(var(--primary))" />
+        <circle cx="60" cy="90" r="3" fill="hsl(var(--background))" />
+        <circle cx="80" cy="90" r="3" fill="hsl(var(--background))" />
+        <circle cx="100" cy="90" r="3" fill="hsl(var(--background))" />
+        <path d="M70 65 Q75 50 80 65 M95 60 Q100 45 105 60 M120 65 Q125 50 130 65"
+          stroke="hsl(var(--accent))" strokeWidth="3" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    title: "Science-backed, life-proof.",
+    body: "Targets calculated from your body and your routine. Flexible enough for real life — holidays, sick days, busy weeks.",
+    art: (
+      <svg viewBox="0 0 200 200" className="w-56 h-56" fill="none">
+        <path d="M30 150 Q70 120 100 100 T170 50" stroke="hsl(var(--primary))" strokeWidth="4" strokeLinecap="round" fill="none" />
+        <circle cx="170" cy="50" r="14" fill="hsl(var(--accent))" />
+        <path d="M164 50 l5 5 l8 -10" stroke="hsl(var(--accent-foreground))" strokeWidth="3" strokeLinecap="round" fill="none" />
+      </svg>
+    ),
+  },
+];
+
+export default function Welcome() {
+  const navigate = useNavigate();
+  const [idx, setIdx] = useState(0);
+  const startX = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (localStorage.getItem("hasSeenWelcome") === "true") {
+      navigate("/auth", { replace: true });
+    }
+  }, [navigate]);
+
+  const finish = (path: string) => {
+    localStorage.setItem("hasSeenWelcome", "true");
+    navigate(path);
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => { startX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (startX.current === null) return;
+    const dx = e.changedTouches[0].clientX - startX.current;
+    if (dx < -40 && idx < slides.length - 1) setIdx(idx + 1);
+    if (dx > 40 && idx > 0) setIdx(idx - 1);
+    startX.current = null;
+  };
+
+  const slide = slides[idx];
+  const isLast = idx === slides.length - 1;
+
+  return (
+    <main
+      className="min-h-screen bg-background flex flex-col"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      <header className="px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-2 font-display font-semibold">
+          <LeafIcon className="h-5 w-5 text-primary" /> Kitchen
+        </div>
+        {idx > 0 && (
+          <button onClick={() => finish("/auth")} className="text-sm text-muted-foreground hover:text-foreground">
+            Skip
+          </button>
+        )}
+      </header>
+
+      <section className="flex-1 flex flex-col items-center justify-center px-6 text-center max-w-md mx-auto">
+        <div className="mb-10">{slide.art}</div>
+        <h1 className="text-3xl sm:text-4xl font-display font-semibold leading-tight text-foreground">
+          {slide.title}
+        </h1>
+        <p className="mt-4 text-muted-foreground text-base leading-relaxed">{slide.body}</p>
+      </section>
+
+      <div className="flex justify-center gap-2 py-6">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIdx(i)}
+            aria-label={`Go to slide ${i + 1}`}
+            className={`h-2 rounded-full transition-all ${i === idx ? "w-8 bg-primary" : "w-2 bg-border"}`}
+          />
+        ))}
+      </div>
+
+      <div className="px-6 pb-10 max-w-md w-full mx-auto space-y-3">
+        {!isLast ? (
+          <Button onClick={() => setIdx(idx + 1)} className="w-full h-12">Next</Button>
+        ) : (
+          <>
+            <Button onClick={() => finish("/auth?mode=signup")} className="w-full h-12">Get started</Button>
+            <Button onClick={() => finish("/auth?mode=signin")} variant="outline" className="w-full h-12">
+              I already have an account
+            </Button>
+          </>
+        )}
+      </div>
+    </main>
+  );
+}

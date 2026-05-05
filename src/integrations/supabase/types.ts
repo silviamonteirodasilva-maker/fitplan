@@ -62,10 +62,61 @@ export type Database = {
           },
         ]
       }
+      household_meal_config: {
+        Row: {
+          household_id: string
+          id: string
+          show_addon: boolean
+          show_breakfast: boolean
+          show_coffee: boolean
+          show_dinner: boolean
+          show_lunch: boolean
+          show_snack_am: boolean
+          show_snack_pm: boolean
+          updated_at: string
+          week_start_day: number
+        }
+        Insert: {
+          household_id: string
+          id?: string
+          show_addon?: boolean
+          show_breakfast?: boolean
+          show_coffee?: boolean
+          show_dinner?: boolean
+          show_lunch?: boolean
+          show_snack_am?: boolean
+          show_snack_pm?: boolean
+          updated_at?: string
+          week_start_day?: number
+        }
+        Update: {
+          household_id?: string
+          id?: string
+          show_addon?: boolean
+          show_breakfast?: boolean
+          show_coffee?: boolean
+          show_dinner?: boolean
+          show_lunch?: boolean
+          show_snack_am?: boolean
+          show_snack_pm?: boolean
+          updated_at?: string
+          week_start_day?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "household_meal_config_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: true
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       household_preferences: {
         Row: {
           cooking_sessions_per_week: number
           cooking_style: string
+          default_plan_mode: string | null
           household_id: string
           id: string
           max_fresh_cook_days: number
@@ -75,6 +126,7 @@ export type Database = {
         Insert: {
           cooking_sessions_per_week?: number
           cooking_style?: string
+          default_plan_mode?: string | null
           household_id: string
           id?: string
           max_fresh_cook_days?: number
@@ -84,6 +136,7 @@ export type Database = {
         Update: {
           cooking_sessions_per_week?: number
           cooking_style?: string
+          default_plan_mode?: string | null
           household_id?: string
           id?: string
           max_fresh_cook_days?: number
@@ -197,6 +250,47 @@ export type Database = {
             columns: ["metabolic_profile_id"]
             isOneToOne: false
             referencedRelation: "user_metabolic_profile"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plan_pauses: {
+        Row: {
+          days_paused: number | null
+          expected_return_date: string | null
+          id: string
+          notes: string | null
+          paused_at: string
+          reason: Database["public"]["Enums"]["pause_reason"]
+          resumed_at: string | null
+          user_id: string
+        }
+        Insert: {
+          days_paused?: number | null
+          expected_return_date?: string | null
+          id?: string
+          notes?: string | null
+          paused_at?: string
+          reason: Database["public"]["Enums"]["pause_reason"]
+          resumed_at?: string | null
+          user_id: string
+        }
+        Update: {
+          days_paused?: number | null
+          expected_return_date?: string | null
+          id?: string
+          notes?: string | null
+          paused_at?: string
+          reason?: Database["public"]["Enums"]["pause_reason"]
+          resumed_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_pauses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -836,7 +930,9 @@ export type Database = {
           day_of_week: number
           id: string
           meal_type: Database["public"]["Enums"]["meal_type"]
+          notes: string | null
           recipe_id: string | null
+          slot_state: string
           weekly_plan_id: string
         }
         Insert: {
@@ -844,7 +940,9 @@ export type Database = {
           day_of_week: number
           id?: string
           meal_type: Database["public"]["Enums"]["meal_type"]
+          notes?: string | null
           recipe_id?: string | null
+          slot_state?: string
           weekly_plan_id: string
         }
         Update: {
@@ -852,7 +950,9 @@ export type Database = {
           day_of_week?: number
           id?: string
           meal_type?: Database["public"]["Enums"]["meal_type"]
+          notes?: string | null
           recipe_id?: string | null
+          slot_state?: string
           weekly_plan_id?: string
         }
         Relationships: [
@@ -934,6 +1034,7 @@ export type Database = {
         | "addon"
       member_type: "active" | "passive_adult" | "child"
       neat_level: "low" | "medium" | "high"
+      pause_reason: "sickness" | "holiday" | "other"
       plan_status: "draft" | "confirmed" | "shopping_done" | "completed"
       recipe_source:
         | "anytime_fitness_pdf"
@@ -1097,6 +1198,7 @@ export const Constants = {
       ],
       member_type: ["active", "passive_adult", "child"],
       neat_level: ["low", "medium", "high"],
+      pause_reason: ["sickness", "holiday", "other"],
       plan_status: ["draft", "confirmed", "shopping_done", "completed"],
       recipe_source: [
         "anytime_fitness_pdf",
