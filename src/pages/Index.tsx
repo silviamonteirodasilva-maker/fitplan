@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { addDays, format, isSameDay } from "date-fns";
-import { ChevronLeft, ChevronRight, MoreVertical, LogOut, Settings as SettingsIcon, Pause, CalendarDays, LayoutGrid, Square, Search, Utensils, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, MoreVertical, LogOut, Settings as SettingsIcon, Pause, CalendarDays, LayoutGrid, Square, Search, Utensils } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
