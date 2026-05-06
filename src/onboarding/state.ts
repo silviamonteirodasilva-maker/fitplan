@@ -97,6 +97,7 @@ export const initialState: OnboardingState = {
   cooking: {
     plan_start_date: nextMonday(),
     preferred_shopping_day: 6, // Sunday
+    topup_shopping_day: null,
     cooking_sessions_per_week: 2,
     max_fresh_cook_days: 3,
   },
