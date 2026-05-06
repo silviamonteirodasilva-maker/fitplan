@@ -83,6 +83,12 @@ export default function Settings() {
       </header>
 
       <section className="max-w-md mx-auto px-4 py-6 space-y-8">
+        <div className="rounded-2xl bg-card border border-border p-5">
+          <div className="font-display text-lg font-semibold">{me?.name ?? "—"}</div>
+          <div className="mt-2 text-sm text-muted-foreground">Goal: <span className="text-foreground font-medium">{profile.goal ? (({fat_loss:"Fat loss",muscle_gain:"Muscle gain",recomp:"Recomposition",maintain:"Maintenance"} as Record<string,string>)[profile.goal] ?? profile.goal) : "—"}</span></div>
+          <div className="mt-1 text-sm text-muted-foreground">Daily calories: <span className="text-foreground font-medium tabular-nums">{profile.calories != null ? `${profile.calories.toLocaleString()} kcal` : "—"}</span></div>
+        </div>
+
         <div>
           <h2 className="font-display text-lg font-semibold mb-3">Meal slots</h2>
           {!isAdmin && <p className="text-xs text-muted-foreground mb-3">Read-only — only the household admin can change these.</p>}
