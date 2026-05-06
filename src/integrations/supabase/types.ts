@@ -121,6 +121,7 @@ export type Database = {
           id: string
           max_fresh_cook_days: number
           preferred_shopping_day: number | null
+          topup_shopping_day: number | null
           updated_at: string
         }
         Insert: {
@@ -131,6 +132,7 @@ export type Database = {
           id?: string
           max_fresh_cook_days?: number
           preferred_shopping_day?: number | null
+          topup_shopping_day?: number | null
           updated_at?: string
         }
         Update: {
@@ -141,6 +143,7 @@ export type Database = {
           id?: string
           max_fresh_cook_days?: number
           preferred_shopping_day?: number | null
+          topup_shopping_day?: number | null
           updated_at?: string
         }
         Relationships: [

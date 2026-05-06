@@ -1,0 +1,1 @@
+ALTER TABLE public.household_preferences ADD COLUMN IF NOT EXISTS topup_shopping_day integer;
