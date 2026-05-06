@@ -55,6 +55,7 @@ export interface OnboardingState {
   cooking: {
     plan_start_date: string; // YYYY-MM-DD
     preferred_shopping_day: number; // 0=Mon..6=Sun
+    topup_shopping_day: number | null;
     cooking_style?: CookingStyle;
     cooking_sessions_per_week: number;
     max_fresh_cook_days: number;
