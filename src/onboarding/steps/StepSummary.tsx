@@ -82,9 +82,15 @@ export function StepSummary({ state, onNext, onBack, step, total }: Props) {
 
       <p className="text-foreground/90 leading-relaxed">{explanation}</p>
 
+      {r.goal === "fat_loss" && (
+        <div className="rounded-xl bg-primary/5 border border-primary/20 text-foreground p-4 text-sm leading-relaxed">
+          The goal is fat loss, not just weight loss. With enough protein and resistance training, most of the weight you lose should come from fat, not muscle. Your weekly check-in tracks both — if muscle mass drops, we'll flag it and adjust.
+        </div>
+      )}
+
       {r.calories_floored && (
         <div className="rounded-xl bg-accent/10 border border-accent/30 text-foreground p-4 text-sm">
-          We adjusted your calories slightly upward to meet a safe minimum. Going below this can slow your metabolism and affect recovery.
+          Your calorie target has been set to the minimum safe level for someone with your body size and activity level. Going lower risks muscle loss and metabolic adaptation.
         </div>
       )}
       {r.deficit_capped && (

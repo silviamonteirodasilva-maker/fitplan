@@ -66,8 +66,8 @@ export function computeMetabolic(s: OnboardingState): MetabolicResult {
     target = tdee + 250;
   }
 
-  const floor = sex === "male" ? 1700 : 1500;
-  if (target < floor) { target = floor; calories_floored = true; }
+  const floor = Math.max(bmr * 1.1, sex === "female" ? 1600 : 1800);
+  if (target < floor) { target = Math.round(floor); calories_floored = true; }
 
   // Macros
   const proteinPerKg = goal === "fat_loss" || goal === "recomp" ? 2.0 : 1.6;
