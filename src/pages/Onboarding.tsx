@@ -135,6 +135,7 @@ export default function Onboarding() {
       const { error: hpErr } = await supabase.from("household_preferences").insert({
         household_id: hh.id,
         preferred_shopping_day: state.cooking.preferred_shopping_day,
+        topup_shopping_day: state.cooking.topup_shopping_day,
         cooking_sessions_per_week: state.cooking.cooking_sessions_per_week,
         cooking_style: state.cooking.cooking_style ?? "mixed",
         max_fresh_cook_days: state.cooking.max_fresh_cook_days,
