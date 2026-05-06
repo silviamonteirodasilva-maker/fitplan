@@ -15,19 +15,26 @@ const REQUIRED_SLOTS = ["breakfast", "lunch", "dinner"] as const;
 export default function Settings() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [me, setMe] = useState<{ id: string; household_id: string; is_household_admin: boolean } | null>(null);
+  const [me, setMe] = useState<{ id: string; name: string; household_id: string; is_household_admin: boolean } | null>(null);
+  const [profile, setProfile] = useState<{ goal: string | null; calories: number | null }>({ goal: null, calories: null });
   const [cfg, setCfg] = useState<any>(null);
   const [planMode, setPlanMode] = useState<string>("ask");
   const [members, setMembers] = useState<{ id: string; name: string; is_household_admin: boolean }[]>([]);
 
   useEffect(() => {
     if (loading) return;
-    if (!user) { navigate("/auth"); return; }
+    if (!user) { navigate("/auth?mode=signin"); return; }
     (async () => {
-      const { data: u } = await supabase.from("users").select("id, household_id, is_household_admin").eq("auth_user_id", user.id).maybeSingle();
+      const { data: u } = await supabase.from("users").select("id, name, household_id, is_household_admin, is_onboarded").eq("auth_user_id", user.id).maybeSingle();
       if (!u) { navigate("/onboarding"); return; }
       setMe(u);
-      const { data: c } = await supabase.from("household_meal_config").select("*").eq("household_id", u.household_id).maybeSingle();
+      const { data: mp } = await supabase.from("user_metabolic_profile").select("goal, goal_calories").eq("user_id", u.id).eq("is_active", true).maybeSingle();
+      setProfile({ goal: mp?.goal ?? null, calories: mp?.goal_calories ? Math.round(Number(mp.goal_calories)) : null });
+      let { data: c } = await supabase.from("household_meal_config").select("*").eq("household_id", u.household_id).maybeSingle();
+      if (!c) {
+        const { data: created } = await supabase.from("household_meal_config").insert({ household_id: u.household_id }).select().single();
+        c = created;
+      }
       setCfg(c);
       const { data: hp } = await supabase.from("household_preferences").select("default_plan_mode").eq("household_id", u.household_id).maybeSingle();
       setPlanMode(hp?.default_plan_mode ?? "ask");
