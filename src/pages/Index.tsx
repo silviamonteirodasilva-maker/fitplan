@@ -99,10 +99,12 @@ export default function Index() {
     if (loading) return;
     if (!user) { navigate("/auth"); return; }
     (async () => {
-      const { data: u } = await supabase.from("users")
+      const { data: u, error: uErr } = await supabase.from("users")
         .select("id, name, is_onboarded, is_household_admin, household_id, households(id, name, plan_start_date)")
         .eq("auth_user_id", user.id).maybeSingle();
-      if (!u || !u.is_onboarded) { navigate("/onboarding"); return; }
+      console.log("[Index] users lookup", { authUserId: user.id, row: u, error: uErr });
+      if (!u) { navigate("/onboarding"); return; }
+      if (!u.is_onboarded) { navigate("/onboarding"); return; }
       const hh = u.households as any;
       // Plan-start gate
       if (hh?.plan_start_date) {
