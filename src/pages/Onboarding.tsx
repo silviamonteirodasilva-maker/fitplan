@@ -208,6 +208,7 @@ export default function Onboarding() {
 
       await writeProfileFor(invitedRow.id, state, r, today, planEndStr);
       toast.success("All set!");
+      clearOnboardedCache();
       navigate("/");
     } catch (e: any) {
       console.error(e);
