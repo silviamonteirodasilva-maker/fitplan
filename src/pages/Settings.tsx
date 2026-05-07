@@ -66,7 +66,7 @@ export default function Settings() {
     navigate("/");
   };
 
-  if (loading || !cfg) return <div className="min-h-screen bg-background" />;
+  if (!ready || !cfg) return <div className="min-h-screen bg-background" />;
 
   const isAdmin = me?.is_household_admin ?? false;
 
