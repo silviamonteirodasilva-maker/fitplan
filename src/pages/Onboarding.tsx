@@ -16,7 +16,7 @@ import { StepMembersChoice } from "@/onboarding/steps/StepMembersChoice";
 import { StepMember } from "@/onboarding/steps/StepMember";
 import { StepDone } from "@/onboarding/steps/StepDone";
 import { toast } from "sonner";
-import { clearOnboardedCache } from "@/hooks/useRequireOnboarded";
+import { setOnboardedCache } from "@/hooks/useRequireOnboarded";
 
 // ----------------------------------------------------------------------------
 // Step orchestration — admin (full) flow vs invite-only (shortened) flow
@@ -174,7 +174,7 @@ export default function Onboarding() {
       }
 
       toast.success("All set!");
-      clearOnboardedCache();
+      setOnboardedCache({ id: usr.id, household_id: hh.id, name: state.user.name, is_household_admin: true });
       navigate("/");
     } catch (e: any) {
       console.error(e);
@@ -208,7 +208,7 @@ export default function Onboarding() {
 
       await writeProfileFor(invitedRow.id, state, r, today, planEndStr);
       toast.success("All set!");
-      clearOnboardedCache();
+      setOnboardedCache({ id: invitedRow.id, household_id: invitedRow.household_id, name: state.user.name || invitedRow.name, is_household_admin: false });
       navigate("/");
     } catch (e: any) {
       console.error(e);

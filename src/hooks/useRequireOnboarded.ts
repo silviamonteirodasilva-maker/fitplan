@@ -9,7 +9,7 @@ let cached: Me | null = null;
 
 /**
  * Auth guard for protected routes.
- * - Not logged in -> /auth?mode=signin
+ * - Not logged in -> /welcome
  * - Logged in, no users row OR is_onboarded=false -> /onboarding
  * - Logged in & onboarded -> returns the cached `me` row
  */
@@ -23,7 +23,7 @@ export function useRequireOnboarded() {
     if (loading) return;
     if (!user) {
       cached = null;
-      navigate("/auth?mode=signin", { replace: true });
+      navigate("/welcome", { replace: true });
       return;
     }
     if (cached) {
@@ -31,12 +31,14 @@ export function useRequireOnboarded() {
       setReady(true);
       return;
     }
+    let cancelled = false;
     (async () => {
       const { data: u, error } = await supabase
         .from("users")
         .select("id, household_id, name, is_household_admin, is_onboarded")
         .eq("auth_user_id", user.id)
         .maybeSingle();
+      if (cancelled) return;
       if (error) { console.error("[useRequireOnboarded]", error); return; }
       if (!u || !u.is_onboarded) {
         navigate("/onboarding", { replace: true });
@@ -46,9 +48,11 @@ export function useRequireOnboarded() {
       setMe(cached);
       setReady(true);
     })();
+    return () => { cancelled = true; };
   }, [user, loading, navigate]);
 
   return { me, ready, authUser: user };
 }
 
 export function clearOnboardedCache() { cached = null; }
+export function setOnboardedCache(me: Me) { cached = me; }
