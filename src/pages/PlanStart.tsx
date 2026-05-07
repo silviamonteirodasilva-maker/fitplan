@@ -14,30 +14,27 @@ const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Frid
 
 export default function PlanStart() {
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { me, ready } = useRequireOnboarded();
   const [householdId, setHouseholdId] = useState<string | null>(null);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [weekStart, setWeekStart] = useState(1);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (loading || !user) return;
+    if (!ready || !me) return;
     (async () => {
-      const { data: u } = await supabase.from("users")
-        .select("household_id, households(plan_start_date)")
-        .eq("auth_user_id", user.id).maybeSingle();
-      if (!u?.household_id) { navigate("/onboarding"); return; }
-      setHouseholdId(u.household_id);
-      const psd = (u.households as any)?.plan_start_date;
+      const { data: hh } = await supabase.from("households").select("plan_start_date").eq("id", me.household_id).maybeSingle();
+      setHouseholdId(me.household_id);
+      const psd = hh?.plan_start_date;
       const today = new Date(); today.setHours(0, 0, 0, 0);
       const planDate = psd ? new Date(psd) : nextWeekday(1);
       if (planDate <= today) { navigate("/"); return; }
       setDate(planDate);
       const { data: cfg } = await supabase.from("household_meal_config")
-        .select("week_start_day").eq("household_id", u.household_id).maybeSingle();
+        .select("week_start_day").eq("household_id", me.household_id).maybeSingle();
       if (cfg) setWeekStart(cfg.week_start_day);
     })();
-  }, [user, loading, navigate]);
+  }, [ready, me, navigate]);
 
   const confirm = async () => {
     if (!householdId || !date) return;
