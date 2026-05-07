@@ -10,6 +10,9 @@ import Onboarding from "./pages/Onboarding.tsx";
 import Welcome from "./pages/Welcome.tsx";
 import PlanStart from "./pages/PlanStart.tsx";
 import Settings from "./pages/Settings.tsx";
+import Recipes from "./pages/Recipes.tsx";
+import RecipeDetail from "./pages/RecipeDetail.tsx";
+import RecipeForm from "./pages/RecipeForm.tsx";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +29,10 @@ const App = () => (
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/plan-start" element={<PlanStart />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/recipes" element={<Recipes />} />
+          <Route path="/recipes/new" element={<RecipeForm />} />
+          <Route path="/recipes/:id" element={<RecipeDetail />} />
+          <Route path="/recipes/:id/edit" element={<RecipeForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

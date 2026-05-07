@@ -16,6 +16,7 @@ import { StepMembersChoice } from "@/onboarding/steps/StepMembersChoice";
 import { StepMember } from "@/onboarding/steps/StepMember";
 import { StepDone } from "@/onboarding/steps/StepDone";
 import { toast } from "sonner";
+import { clearOnboardedCache } from "@/hooks/useRequireOnboarded";
 
 // ----------------------------------------------------------------------------
 // Step orchestration — admin (full) flow vs invite-only (shortened) flow
@@ -173,6 +174,7 @@ export default function Onboarding() {
       }
 
       toast.success("All set!");
+      clearOnboardedCache();
       navigate("/");
     } catch (e: any) {
       console.error(e);
@@ -206,6 +208,7 @@ export default function Onboarding() {
 
       await writeProfileFor(invitedRow.id, state, r, today, planEndStr);
       toast.success("All set!");
+      clearOnboardedCache();
       navigate("/");
     } catch (e: any) {
       console.error(e);

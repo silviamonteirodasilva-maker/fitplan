@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useRequireOnboarded } from "@/hooks/useRequireOnboarded";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -14,34 +14,29 @@ const REQUIRED_SLOTS = ["breakfast", "lunch", "dinner"] as const;
 
 export default function Settings() {
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
-  const [me, setMe] = useState<{ id: string; name: string; household_id: string; is_household_admin: boolean } | null>(null);
+  const { me, ready } = useRequireOnboarded();
   const [profile, setProfile] = useState<{ goal: string | null; calories: number | null }>({ goal: null, calories: null });
   const [cfg, setCfg] = useState<any>(null);
   const [planMode, setPlanMode] = useState<string>("ask");
   const [members, setMembers] = useState<{ id: string; name: string; is_household_admin: boolean }[]>([]);
 
   useEffect(() => {
-    if (loading) return;
-    if (!user) { navigate("/auth?mode=signin"); return; }
+    if (!ready || !me) return;
     (async () => {
-      const { data: u } = await supabase.from("users").select("id, name, household_id, is_household_admin, is_onboarded").eq("auth_user_id", user.id).maybeSingle();
-      if (!u) { navigate("/onboarding"); return; }
-      setMe(u);
-      const { data: mp } = await supabase.from("user_metabolic_profile").select("goal, goal_calories").eq("user_id", u.id).eq("is_active", true).maybeSingle();
+      const { data: mp } = await supabase.from("user_metabolic_profile").select("goal, goal_calories").eq("user_id", me.id).eq("is_active", true).maybeSingle();
       setProfile({ goal: mp?.goal ?? null, calories: mp?.goal_calories ? Math.round(Number(mp.goal_calories)) : null });
-      let { data: c } = await supabase.from("household_meal_config").select("*").eq("household_id", u.household_id).maybeSingle();
+      let { data: c } = await supabase.from("household_meal_config").select("*").eq("household_id", me.household_id).maybeSingle();
       if (!c) {
-        const { data: created } = await supabase.from("household_meal_config").insert({ household_id: u.household_id }).select().single();
+        const { data: created } = await supabase.from("household_meal_config").insert({ household_id: me.household_id }).select().single();
         c = created;
       }
       setCfg(c);
-      const { data: hp } = await supabase.from("household_preferences").select("default_plan_mode").eq("household_id", u.household_id).maybeSingle();
+      const { data: hp } = await supabase.from("household_preferences").select("default_plan_mode").eq("household_id", me.household_id).maybeSingle();
       setPlanMode(hp?.default_plan_mode ?? "ask");
-      const { data: ms } = await supabase.from("users").select("id, name, is_household_admin").eq("household_id", u.household_id);
+      const { data: ms } = await supabase.from("users").select("id, name, is_household_admin").eq("household_id", me.household_id);
       setMembers(ms ?? []);
     })();
-  }, [user, loading, navigate]);
+  }, [ready, me]);
 
   const updateCfg = async (patch: any) => {
     if (!me || !cfg) return;
@@ -71,7 +66,7 @@ export default function Settings() {
     navigate("/");
   };
 
-  if (loading || !cfg) return <div className="min-h-screen bg-background" />;
+  if (!ready || !cfg) return <div className="min-h-screen bg-background" />;
 
   const isAdmin = me?.is_household_admin ?? false;
 

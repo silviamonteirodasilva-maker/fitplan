@@ -382,12 +382,14 @@ export type Database = {
           carbs_per_serving_g: number | null
           cook_time_minutes: number | null
           created_at: string
+          created_by_user_id: string | null
           default_lasts_days: number
           description: string | null
           external_id: string | null
           fat_per_serving_g: number | null
           freezer_lasts_days: number | null
           has_thermomix_variant: boolean
+          household_id: string | null
           id: string
           is_published: boolean
           meal_type: Database["public"]["Enums"]["meal_type"]
@@ -403,12 +405,14 @@ export type Database = {
           carbs_per_serving_g?: number | null
           cook_time_minutes?: number | null
           created_at?: string
+          created_by_user_id?: string | null
           default_lasts_days?: number
           description?: string | null
           external_id?: string | null
           fat_per_serving_g?: number | null
           freezer_lasts_days?: number | null
           has_thermomix_variant?: boolean
+          household_id?: string | null
           id?: string
           is_published?: boolean
           meal_type: Database["public"]["Enums"]["meal_type"]
@@ -424,12 +428,14 @@ export type Database = {
           carbs_per_serving_g?: number | null
           cook_time_minutes?: number | null
           created_at?: string
+          created_by_user_id?: string | null
           default_lasts_days?: number
           description?: string | null
           external_id?: string | null
           fat_per_serving_g?: number | null
           freezer_lasts_days?: number | null
           has_thermomix_variant?: boolean
+          household_id?: string | null
           id?: string
           is_published?: boolean
           meal_type?: Database["public"]["Enums"]["meal_type"]
@@ -439,7 +445,22 @@ export type Database = {
           source?: Database["public"]["Enums"]["recipe_source"]
           tags?: string[] | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "recipes_created_by_user_id_fkey"
+            columns: ["created_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recipes_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       shopping_list_items: {
         Row: {
