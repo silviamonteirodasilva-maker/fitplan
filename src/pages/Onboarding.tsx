@@ -108,6 +108,10 @@ export default function Onboarding() {
       planEnd.setDate(planEnd.getDate() + r.review_days);
       const planEndStr = planEnd.toISOString().slice(0, 10);
 
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log("[submitFull] auth.uid() =", session?.user?.id ?? "null — no active session");
+      if (!session) throw new Error("No active session — please sign in again before completing setup.");
+
       const { data: hh, error: hhErr } = await supabase
         .from("households")
         .insert({ name: state.household.name, plan_start_date: state.cooking.plan_start_date, plan_duration_weeks: 12 })
