@@ -29,6 +29,10 @@ const App = () => (
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/plan-start" element={<PlanStart />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/recipes" element={<Recipes />} />
+          <Route path="/recipes/new" element={<RecipeForm />} />
+          <Route path="/recipes/:id" element={<RecipeDetail />} />
+          <Route path="/recipes/:id/edit" element={<RecipeForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
