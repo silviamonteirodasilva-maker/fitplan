@@ -46,7 +46,7 @@ export default function PlanStart() {
     navigate("/");
   };
 
-  if (loading || !date) return <div className="min-h-screen bg-background" />;
+  if (!ready || !date) return <div className="min-h-screen bg-background" />;
 
   return (
     <main className="min-h-screen bg-background flex flex-col items-center justify-center px-6 py-10">
