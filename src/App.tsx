@@ -10,6 +10,9 @@ import Onboarding from "./pages/Onboarding.tsx";
 import Welcome from "./pages/Welcome.tsx";
 import PlanStart from "./pages/PlanStart.tsx";
 import Settings from "./pages/Settings.tsx";
+import Recipes from "./pages/Recipes.tsx";
+import RecipeDetail from "./pages/RecipeDetail.tsx";
+import RecipeForm from "./pages/RecipeForm.tsx";
 
 const queryClient = new QueryClient();
 
