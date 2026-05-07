@@ -34,14 +34,16 @@ export default function Auth() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: `${window.location.origin}/onboarding` },
+          options: { emailRedirectTo: `${window.location.origin}/` },
         });
         if (error) throw error;
+        clearOnboardedCache();
         toast.success("Welcome! Check your email if confirmation is required.");
-        navigate("/onboarding");
+        navigate("/");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        clearOnboardedCache();
         navigate("/");
       }
     } catch (err: any) {
