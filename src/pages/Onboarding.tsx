@@ -174,6 +174,7 @@ export default function Onboarding() {
       }
 
       toast.success("All set!");
+      clearOnboardedCache();
       navigate("/");
     } catch (e: any) {
       console.error(e);
