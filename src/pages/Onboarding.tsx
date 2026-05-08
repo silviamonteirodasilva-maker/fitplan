@@ -153,7 +153,7 @@ export default function Onboarding() {
         const { data: mUser, error: mErr } = await supabase
           .from("users")
           .insert({
-            household_id: hh.id,
+            household_id: householdId,
             name: m.name,
             email: m.email ?? null,
             date_of_birth: m.date_of_birth ?? null,
