@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { StepShell } from "../components/StepShell";
 import { OptionCard } from "../components/OptionCard";
 import { Stepper } from "../components/Stepper";
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { scrollToNext } from "../utils/scroll";
 import type { OnboardingState, JobType, CardioIntensity, NeatLevel } from "../state";
 
 const JOBS: { v: JobType; label: string }[] = [
@@ -35,21 +37,24 @@ interface Props {
 export function StepActivity({ state, onPatch, onNext, onBack, step, total }: Props) {
   const a = state.activity;
   const valid = !!a.job_type && !!a.neat_level;
+  const strengthRef = useRef<HTMLDivElement>(null);
+  const continueRef = useRef<HTMLButtonElement>(null);
   return (
     <StepShell
       step={step} total={total} onBack={onBack}
       title="What does your week actually look like?"
       subtitle="Be honest — overestimating activity is the most common reason calorie targets feel off."
-      footer={<Button onClick={onNext} disabled={!valid} className="w-full h-14 text-base">Continue</Button>}
+      footer={<Button ref={continueRef} onClick={onNext} disabled={!valid} className="w-full h-14 text-base">Continue</Button>}
     >
       <Section title="Job type" hint="Your job's baseline movement sets the foundation of your calorie burn. A desk job and a warehouse job can differ by 400–600 kcal per day before any exercise is counted.">
         <div className="space-y-2">
           {JOBS.map((j) => (
-            <OptionCard key={j.v} selected={a.job_type === j.v} onClick={() => onPatch({ job_type: j.v })} title={j.label} />
+            <OptionCard key={j.v} selected={a.job_type === j.v} onClick={() => { onPatch({ job_type: j.v }); scrollToNext(strengthRef.current); }} title={j.label} />
           ))}
         </div>
       </Section>
 
+      <div ref={strengthRef}>
       <Section title="Strength training" hint="Lifting sessions are calculated using MET values — a measure of exercise intensity relative to rest. Duration and frequency both matter for your weekly energy expenditure.">
         <div>
           <Label className="text-sm text-muted-foreground">Sessions per week</Label>
@@ -67,6 +72,7 @@ export function StepActivity({ state, onPatch, onNext, onBack, step, total }: Pr
           </div>
         )}
       </Section>
+      </div>
 
       <Section title="Cardio" hint="Cardio intensity changes calorie burn significantly. A 30-minute walk and a 30-minute run cover very different energy costs. Intensity lets us be accurate rather than average.">
         <div>
@@ -126,7 +132,7 @@ export function StepActivity({ state, onPatch, onNext, onBack, step, total }: Pr
       >
         <div className="space-y-2">
           {NEATS.map((n) => (
-            <OptionCard key={n.v} selected={a.neat_level === n.v} onClick={() => onPatch({ neat_level: n.v })} title={n.label} />
+            <OptionCard key={n.v} selected={a.neat_level === n.v} onClick={() => { onPatch({ neat_level: n.v }); scrollToNext(continueRef.current, { highlight: false }); }} title={n.label} />
           ))}
         </div>
       </Section>
