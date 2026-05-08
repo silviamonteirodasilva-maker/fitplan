@@ -1,6 +1,8 @@
+import { useRef } from "react";
 import { StepShell } from "../components/StepShell";
 import { OptionCard } from "../components/OptionCard";
 import { Button } from "@/components/ui/button";
+import { scrollToNext } from "../utils/scroll";
 import type { FitnessGoal, OnboardingState } from "../state";
 
 const GOALS: { value: FitnessGoal; title: string; description: string; meta: string }[] = [
@@ -20,12 +22,19 @@ interface Props {
 }
 
 export function StepGoal({ state, onChange, onNext, onBack, step, total }: Props) {
+  const continueRef = useRef<HTMLButtonElement>(null);
+
+  const handlePick = (g: FitnessGoal) => {
+    onChange(g);
+    scrollToNext(continueRef.current, { highlight: false });
+  };
+
   return (
     <StepShell
       step={step} total={total} onBack={onBack}
       title="What's your main goal right now?"
       footer={
-        <Button onClick={onNext} disabled={!state.goal} className="w-full h-14 text-base">Continue</Button>
+        <Button ref={continueRef} onClick={onNext} disabled={!state.goal} className="w-full h-14 text-base">Continue</Button>
       }
     >
       <div className="space-y-3">
@@ -33,7 +42,7 @@ export function StepGoal({ state, onChange, onNext, onBack, step, total }: Props
           <OptionCard
             key={g.value}
             selected={state.goal === g.value}
-            onClick={() => onChange(g.value)}
+            onClick={() => handlePick(g.value)}
             title={g.title}
             description={g.description}
             meta={g.meta}
