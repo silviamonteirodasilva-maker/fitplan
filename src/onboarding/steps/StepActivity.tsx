@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { StepShell } from "../components/StepShell";
 import { OptionCard } from "../components/OptionCard";
 import { Stepper } from "../components/Stepper";
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { scrollToNext } from "../utils/scroll";
 import type { OnboardingState, JobType, CardioIntensity, NeatLevel } from "../state";
 
 const JOBS: { v: JobType; label: string }[] = [
