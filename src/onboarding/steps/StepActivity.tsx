@@ -54,6 +54,7 @@ export function StepActivity({ state, onPatch, onNext, onBack, step, total }: Pr
         </div>
       </Section>
 
+      <div ref={strengthRef}>
       <Section title="Strength training" hint="Lifting sessions are calculated using MET values — a measure of exercise intensity relative to rest. Duration and frequency both matter for your weekly energy expenditure.">
         <div>
           <Label className="text-sm text-muted-foreground">Sessions per week</Label>
