@@ -1,0 +1,1 @@
+GRANT INSERT ON public.households TO authenticated;
