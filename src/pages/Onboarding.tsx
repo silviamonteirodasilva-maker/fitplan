@@ -112,17 +112,17 @@ export default function Onboarding() {
       console.log("[submitFull] auth.uid() =", session?.user?.id ?? "null — no active session");
       if (!session) throw new Error("No active session — please sign in again before completing setup.");
 
-      const { data: hh, error: hhErr } = await supabase
+      const householdId = crypto.randomUUID();
+      const { error: hhErr } = await supabase
         .from("households")
-        .insert({ name: state.household.name, plan_start_date: state.cooking.plan_start_date, plan_duration_weeks: 12 })
-        .select().single();
+        .insert({ id: householdId, name: state.household.name, plan_start_date: state.cooking.plan_start_date, plan_duration_weeks: 12 });
       if (hhErr) throw hhErr;
 
       const { data: usr, error: usrErr } = await supabase
         .from("users")
         .insert({
           auth_user_id: user.id,
-          household_id: hh.id,
+          household_id: householdId,
           name: state.user.name,
           email: user.email,
           date_of_birth: state.user.date_of_birth,
@@ -138,7 +138,7 @@ export default function Onboarding() {
 
       // household_preferences
       const { error: hpErr } = await supabase.from("household_preferences").insert({
-        household_id: hh.id,
+        household_id: householdId,
         preferred_shopping_day: state.cooking.preferred_shopping_day,
         topup_shopping_day: state.cooking.topup_shopping_day,
         cooking_sessions_per_week: state.cooking.cooking_sessions_per_week,
@@ -153,7 +153,7 @@ export default function Onboarding() {
         const { data: mUser, error: mErr } = await supabase
           .from("users")
           .insert({
-            household_id: hh.id,
+            household_id: householdId,
             name: m.name,
             email: m.email ?? null,
             date_of_birth: m.date_of_birth ?? null,
@@ -178,7 +178,7 @@ export default function Onboarding() {
       }
 
       toast.success("All set!");
-      setOnboardedCache({ id: usr.id, household_id: hh.id, name: state.user.name, is_household_admin: true });
+      setOnboardedCache({ id: usr.id, household_id: householdId, name: state.user.name, is_household_admin: true });
       navigate("/");
     } catch (e: any) {
       console.error(e);
