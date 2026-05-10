@@ -66,7 +66,7 @@ export function StepSummary({ state, onNext, onBack, step, total }: Props) {
           {pill.label}
         </span>
         <div className="text-sm opacity-80 uppercase tracking-wider mt-4">Daily calorie target</div>
-        <div className="text-5xl font-display font-semibold mt-1 tabular-nums">
+        <div className="text-5xl font-medium mt-1 tabular-nums">
           {r.goal_calories.toLocaleString()} <span className="text-2xl opacity-80">kcal</span>
         </div>
         <div className="grid grid-cols-3 gap-3 mt-6">
@@ -111,7 +111,7 @@ export function StepSummary({ state, onNext, onBack, step, total }: Props) {
       {showMore && (
         <div className="rounded-2xl bg-card border border-border p-5 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
           <div>
-            <div className="font-display text-base font-semibold mb-2">Your macro split</div>
+            <div className="text-base font-semibold mb-2">Your macro split</div>
             <div className="h-56">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -168,7 +168,7 @@ function Macro({ icon, label, value }: { icon: React.ReactNode; label: string; v
   return (
     <div className="bg-white/10 backdrop-blur rounded-xl p-3">
       <div className="flex items-center gap-1.5 text-xs opacity-80">{icon}{label}</div>
-      <div className="text-xl font-display font-semibold mt-1 tabular-nums">{value}</div>
+      <div className="text-xl font-medium mt-1 tabular-nums">{value}</div>
     </div>
   );
 }

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { LeafIcon } from "@/onboarding/components/LeafIcon";
 import { useRequireOnboarded } from "@/hooks/useRequireOnboarded";
 
 const GOAL_LABEL: Record<string, string> = {
@@ -13,6 +12,12 @@ const GOAL_LABEL: Record<string, string> = {
 };
 
 type Member = { id: string; name: string; is_onboarded: boolean; member_type: string; auth_user_id: string | null };
+
+const MEMBER_COLORS = [
+  { bg: 'bg-pinch-hot-pink', text: 'text-pinch-ink' },
+  { bg: 'bg-pinch-acid-green', text: 'text-pinch-ink' },
+  { bg: 'bg-background border border-border', text: 'text-foreground' },
+];
 
 export default function Index() {
   const navigate = useNavigate();
@@ -43,32 +48,32 @@ export default function Index() {
   return (
     <main className="min-h-screen bg-background px-6 py-10 max-w-xl mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2 text-primary">
-          <LeafIcon className="h-6 w-6" />
-          <span className="font-display font-semibold">{data.household_name}</span>
+        <div className="flex items-center gap-2">
+          <img src="/brand/pinch-mark.svg" alt="pinch" className="h-6 w-6" />
+          <span className="font-medium text-foreground">{data.household_name}</span>
         </div>
         <Button variant="outline" size="sm" onClick={() => navigate("/recipes")}>Recipes</Button>
       </div>
 
-      <h1 className="font-display text-4xl font-semibold leading-tight">Your plan is on its way.</h1>
+      <h1 className="text-4xl font-medium leading-tight" style={{ letterSpacing: '-0.04em' }}>Your plan is on its way.</h1>
       <p className="mt-3 text-muted-foreground">
         The weekly meal planner is being built. Come back soon — your first week will be ready to plan.
       </p>
 
       <section className="mt-8 rounded-2xl bg-card border border-border p-5">
         <div className="flex items-center justify-between gap-3">
-          <div className="font-display text-lg font-semibold">{data.name}</div>
+          <div className="font-medium text-lg">{data.name}</div>
           {data.goal && (
-            <span className="inline-flex items-center px-3 h-7 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+            <span className="inline-flex items-center px-3 h-7 rounded-full text-xs font-medium bg-primary text-primary-foreground uppercase tracking-wider" style={{ letterSpacing: '0.08em' }}>
               {GOAL_LABEL[data.goal] ?? data.goal}
             </span>
           )}
         </div>
         {data.calories != null && (
           <div className="mt-4">
-            <div className="text-xs uppercase tracking-wider text-muted-foreground">Daily calorie target</div>
-            <div className="text-3xl font-display font-semibold mt-1 tabular-nums">
-              {data.calories.toLocaleString()} <span className="text-base text-muted-foreground">kcal</span>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground" style={{ letterSpacing: '0.1em' }}>Daily calorie target</div>
+            <div className="text-3xl font-medium mt-1 tabular-nums" style={{ letterSpacing: '-0.04em' }}>
+              {data.calories.toLocaleString()} <span className="text-base text-muted-foreground font-normal">kcal</span>
             </div>
           </div>
         )}
@@ -76,18 +81,26 @@ export default function Index() {
 
       {members.length > 0 && (
         <section className="mt-4 rounded-2xl bg-card border border-border p-5">
-          <div className="font-display text-base font-semibold mb-3">Household</div>
+          <div className="font-medium text-base mb-3">Household</div>
           <ul className="space-y-2 text-sm">
-            {members.map((m) => (
-              <li key={m.id} className="flex justify-between">
-                <span className="text-foreground">{m.name}</span>
-                <span className="text-muted-foreground">
-                  {m.member_type === "active"
-                    ? m.is_onboarded ? "Active" : "Awaiting profile"
-                    : m.member_type === "passive_adult" ? "Passive adult" : "Child"}
-                </span>
-              </li>
-            ))}
+            {members.map((m, i) => {
+              const color = MEMBER_COLORS[Math.min(i, MEMBER_COLORS.length - 1)];
+              return (
+                <li key={m.id} className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium ${color.bg} ${color.text}`}>
+                      {m.name.charAt(0).toUpperCase()}
+                    </span>
+                    <span className="text-foreground">{m.name}</span>
+                  </div>
+                  <span className="text-muted-foreground text-xs">
+                    {m.member_type === "active"
+                      ? m.is_onboarded ? "Active" : "Awaiting profile"
+                      : m.member_type === "passive_adult" ? "Passive adult" : "Child"}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}

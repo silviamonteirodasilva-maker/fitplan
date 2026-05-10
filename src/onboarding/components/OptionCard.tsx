@@ -26,7 +26,7 @@ export function OptionCard({ selected, onClick, title, description, meta, disabl
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <div className="font-display text-lg font-semibold text-foreground">{title}</div>
+          <div className="text-lg font-semibold text-foreground">{title}</div>
           {description && <div className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{description}</div>}
           {meta && <div className="mt-2 text-xs text-accent font-medium">{meta}</div>}
         </div>

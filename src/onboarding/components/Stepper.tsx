@@ -22,7 +22,7 @@ export function Stepper({ value, onChange, min = 0, max = 7, suffix }: Props) {
         <Minus className="h-4 w-4" />
       </Button>
       <div className="flex-1 text-center">
-        <span className="text-2xl font-display font-semibold tabular-nums">{value}</span>
+        <span className="text-2xl font-medium tabular-nums">{value}</span>
         {suffix && <span className="text-sm text-muted-foreground ml-1">{suffix}</span>}
       </div>
       <Button

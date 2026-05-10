@@ -209,7 +209,7 @@ export default function RecipeForm() {
     return (
       <main className="min-h-screen bg-background px-6 py-10 max-w-md mx-auto">
         <Button variant="ghost" size="sm" onClick={() => navigate(-1)}><ChevronLeft className="h-4 w-4" />Back</Button>
-        <h1 className="font-display text-2xl font-semibold mt-6">Can't edit this recipe</h1>
+        <h1 className="text-2xl font-semibold mt-6">Can't edit this recipe</h1>
         <p className="text-muted-foreground mt-2">This is a shared recipe and can't be edited. Duplicate it to make your own version.</p>
       </main>
     );
@@ -220,7 +220,7 @@ export default function RecipeForm() {
       <header className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}><ChevronLeft className="h-5 w-5" /></Button>
-          <h1 className="font-display text-xl font-semibold flex-1">{isEdit ? "Edit recipe" : "New recipe"}</h1>
+          <h1 className="text-xl font-semibold flex-1">{isEdit ? "Edit recipe" : "New recipe"}</h1>
           <Button size="sm" disabled={!valid || saving} onClick={save}>{saving ? "..." : "Save"}</Button>
         </div>
       </header>
@@ -234,7 +234,7 @@ export default function RecipeForm() {
 
         {/* Basic info */}
         <div className="space-y-4">
-          <h2 className="font-display text-lg font-semibold">Basic info</h2>
+          <h2 className="text-lg font-semibold">Basic info</h2>
           <div>
             <Label>Recipe name *</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. High-protein oats" />
@@ -273,7 +273,7 @@ export default function RecipeForm() {
 
         {/* Batch */}
         <div className="space-y-4 border-t pt-6">
-          <h2 className="font-display text-lg font-semibold">Batch details</h2>
+          <h2 className="text-lg font-semibold">Batch details</h2>
           <Stepper label="Servings per batch *" value={servings} onChange={setServings} min={1} max={50} />
           <div className="grid grid-cols-2 gap-3">
             <div><Label>Prep (min)</Label><Input type="number" value={prep} onChange={(e) => setPrep(e.target.value)} /></div>
@@ -288,7 +288,7 @@ export default function RecipeForm() {
         {/* Ingredients */}
         <div className="space-y-4 border-t pt-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold">Ingredients</h2>
+            <h2 className="text-lg font-semibold">Ingredients</h2>
             <Button variant="outline" size="sm" onClick={() => setIngredients(s => [...s, blankIng()])}><Plus className="h-4 w-4" />Add</Button>
           </div>
           <div className="space-y-3">
@@ -306,7 +306,7 @@ export default function RecipeForm() {
         {/* Steps */}
         <div className="space-y-4 border-t pt-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold">Steps</h2>
+            <h2 className="text-lg font-semibold">Steps</h2>
             <Button variant="outline" size="sm" onClick={() => setSteps(s => [...s, blankStep()])}><Plus className="h-4 w-4" />Add step</Button>
           </div>
           <div className="space-y-3">

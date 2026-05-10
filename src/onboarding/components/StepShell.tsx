@@ -30,7 +30,7 @@ export function StepShell({ step, total, onBack, title, subtitle, children, foot
       </header>
 
       <main className="flex-1 px-4 max-w-xl mx-auto w-full">
-        <h1 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">{title}</h1>
+        <h1 className="text-3xl md:text-4xl font-medium text-foreground leading-tight">{title}</h1>
         {subtitle && <p className="mt-3 text-muted-foreground text-base leading-relaxed">{subtitle}</p>}
         <div className="mt-8 space-y-6 pb-32">{children}</div>
       </main>

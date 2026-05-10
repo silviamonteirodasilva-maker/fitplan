@@ -144,7 +144,7 @@ function Section({ title, hint, children }: { title: string; hint?: string; chil
   return (
     <div className="rounded-2xl border border-border bg-card p-5 space-y-3">
       <div className="flex items-start gap-2">
-        <div className="font-display text-lg font-semibold flex-1">{title}</div>
+        <div className="text-lg font-semibold flex-1">{title}</div>
         {hint && <HintIcon>{hint}</HintIcon>}
       </div>
       {children}

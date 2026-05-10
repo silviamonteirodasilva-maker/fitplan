@@ -42,7 +42,6 @@ export default function Settings() {
     if (!me || !cfg) return;
     if (!me.is_household_admin) { toast.error("Only the household admin can change this."); return; }
     const next = { ...cfg, ...patch };
-    // Ensure at least one of breakfast/lunch/dinner stays on
     if (!next.show_breakfast && !next.show_lunch && !next.show_dinner) {
       toast.error("Keep at least one of breakfast, lunch or dinner."); return;
     }
@@ -74,18 +73,18 @@ export default function Settings() {
     <main className="min-h-screen bg-background pb-12">
       <header className="px-4 py-3 border-b flex items-center gap-2">
         <Button variant="ghost" size="icon" onClick={() => navigate("/")}><ChevronLeft className="h-5 w-5" /></Button>
-        <h1 className="font-display text-xl font-semibold">Settings</h1>
+        <h1 className="font-medium text-xl">Settings</h1>
       </header>
 
       <section className="max-w-md mx-auto px-4 py-6 space-y-8">
         <div className="rounded-2xl bg-card border border-border p-5">
-          <div className="font-display text-lg font-semibold">{me?.name ?? "—"}</div>
+          <div className="font-medium text-lg">{me?.name ?? "—"}</div>
           <div className="mt-2 text-sm text-muted-foreground">Goal: <span className="text-foreground font-medium">{profile.goal ? (({fat_loss:"Fat loss",muscle_gain:"Muscle gain",recomp:"Recomposition",maintain:"Maintenance"} as Record<string,string>)[profile.goal] ?? profile.goal) : "—"}</span></div>
           <div className="mt-1 text-sm text-muted-foreground">Daily calories: <span className="text-foreground font-medium tabular-nums">{profile.calories != null ? `${profile.calories.toLocaleString()} kcal` : "—"}</span></div>
         </div>
 
         <div>
-          <h2 className="font-display text-lg font-semibold mb-3">Meal slots</h2>
+          <h2 className="font-medium text-lg mb-3">Meal slots</h2>
           {!isAdmin && <p className="text-xs text-muted-foreground mb-3">Read-only — only the household admin can change these.</p>}
           <div className="space-y-3">
             {MEAL_SLOTS.map(s => (
@@ -98,7 +97,7 @@ export default function Settings() {
         </div>
 
         <div>
-          <h2 className="font-display text-lg font-semibold mb-3">Week start day</h2>
+          <h2 className="font-medium text-lg mb-3">Week start day</h2>
           <Select value={String(cfg.week_start_day)} onValueChange={(v) => updateCfg({ week_start_day: Number(v) })} disabled={!isAdmin}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -110,7 +109,7 @@ export default function Settings() {
         </div>
 
         <div>
-          <h2 className="font-display text-lg font-semibold mb-3">Plan defaults</h2>
+          <h2 className="font-medium text-lg mb-3">Plan defaults</h2>
           <Label className="text-sm">Default plan mode</Label>
           <Select value={planMode} onValueChange={updatePlanMode} disabled={!isAdmin}>
             <SelectTrigger><SelectValue /></SelectTrigger>
@@ -123,7 +122,7 @@ export default function Settings() {
         </div>
 
         <div>
-          <h2 className="font-display text-lg font-semibold mb-3">Household admin</h2>
+          <h2 className="font-medium text-lg mb-3">Household admin</h2>
           <p className="text-sm text-muted-foreground mb-3">Current admin: {members.find(m => m.is_household_admin)?.name ?? "—"}</p>
           {isAdmin && members.filter(m => !m.is_household_admin).length > 0 && (
             <div className="space-y-2">
