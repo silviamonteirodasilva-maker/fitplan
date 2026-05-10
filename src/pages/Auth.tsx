@@ -65,11 +65,13 @@ export default function Auth() {
     <main className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-semibold text-foreground">
-            {mode === "signup" ? "Create your account" : "Welcome back"}
-          </h1>
-          <p className="text-muted-foreground mt-2 text-sm">
-            Your kitchen, your goals, your plan.
+          <img
+            src="/brand/pinch-wordmark-light.svg"
+            alt="pinch"
+            className="h-8 mx-auto mb-6"
+          />
+          <p className="text-muted-foreground text-sm">
+            your kitchen, finally figured out.
           </p>
         </div>
 
