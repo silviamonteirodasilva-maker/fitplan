@@ -51,7 +51,7 @@ export default function PlanStart() {
   return (
     <main className="min-h-screen bg-background flex flex-col items-center justify-center px-6 py-10">
       <div className="max-w-md w-full">
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold leading-tight">
+        <h1 className="font-medium text-3xl sm:text-4xl leading-tight" style={{ letterSpacing: '-0.04em' }}>
           Your plan starts on {format(date, "EEEE, d LLL")}.
         </h1>
         <p className="mt-3 text-muted-foreground">
@@ -71,7 +71,7 @@ export default function PlanStart() {
               <Calendar mode="single" selected={date} onSelect={(d) => d && setDate(d)} disabled={(d) => d < new Date(new Date().setHours(0,0,0,0))} initialFocus className={cn("p-3 pointer-events-auto")} />
             </PopoverContent>
           </Popover>
-          <p className="text-sm text-muted-foreground bg-secondary/50 rounded-lg p-3">
+          <p className="text-sm text-muted-foreground bg-muted/50 rounded-lg p-3">
             We recommend starting on your next {DAY_NAMES[weekStart]} — it gives you the weekend to prep.
           </p>
         </div>

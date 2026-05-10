@@ -91,7 +91,7 @@ export default function Recipes() {
       <header className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={() => navigate("/")}><ChevronLeft className="h-5 w-5" /></Button>
-          <h1 className="font-display text-xl font-semibold flex-1">Recipes</h1>
+          <h1 className="font-medium text-xl flex-1">Recipes</h1>
           <Button size="sm" onClick={() => navigate("/recipes/new")}><Plus className="h-4 w-4" />Add recipe</Button>
         </div>
         <div className="max-w-3xl mx-auto px-4 pb-3 space-y-3">
@@ -155,7 +155,7 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
       onClick={onClick}
       className={cn(
         "shrink-0 inline-flex items-center px-3 h-8 rounded-full text-xs font-medium border transition-colors",
-        active ? "bg-primary text-primary-foreground border-primary" : "bg-background text-foreground border-border hover:bg-muted",
+        active ? "bg-pinch-ink text-pinch-milk border-pinch-ink" : "bg-background text-foreground border-border hover:bg-muted",
       )}
     >
       {children}
@@ -168,17 +168,17 @@ function RecipeCard({ r, onClick }: { r: Recipe; onClick: () => void }) {
   return (
     <button onClick={onClick} className="text-left rounded-2xl border border-border bg-card p-4 hover:shadow-md transition-shadow flex flex-col gap-2">
       <div className="flex items-start gap-2">
-        <div className="font-display font-semibold text-sm leading-snug line-clamp-2 flex-1">{r.name}</div>
+        <div className="font-meal text-sm leading-snug line-clamp-2 flex-1">{r.name}</div>
       </div>
       <div className="flex flex-wrap gap-1">
-        <span className="inline-flex items-center px-2 h-5 rounded-full text-[10px] font-medium bg-primary/10 text-primary border border-primary/20">
+        <span className="inline-flex items-center px-2 h-5 rounded-full text-[10px] font-medium bg-primary/10 text-primary border border-primary/20 uppercase" style={{ letterSpacing: '0.08em' }}>
           {MEAL_TYPE_LABEL[r.meal_type] ?? r.meal_type}
         </span>
         {r.source === "user_submitted" && (
-          <span className="inline-flex items-center px-2 h-5 rounded-full text-[10px] font-medium bg-secondary text-secondary-foreground">My recipe</span>
+          <span className="inline-flex items-center px-2 h-5 rounded-full text-[10px] font-medium bg-secondary/20 text-foreground">My recipe</span>
         )}
         {r.has_thermomix_variant && (
-          <span className="inline-flex items-center px-2 h-5 rounded-full text-[10px] font-medium bg-accent text-accent-foreground">TM</span>
+          <span className="inline-flex items-center px-2 h-5 rounded-full text-[10px] font-medium bg-secondary/20 text-foreground">TM</span>
         )}
       </div>
       {tt > 0 && (
@@ -205,17 +205,26 @@ function EmptyState({ anyFilter, onClear, onAdd }: { anyFilter: boolean; onClear
   if (anyFilter) {
     return (
       <div className="text-center py-16">
-        <h2 className="font-display text-xl font-semibold">No recipes match these filters.</h2>
+        <h2 className="font-medium text-xl">No recipes match these filters.</h2>
         <p className="text-muted-foreground mt-2 text-sm">Try removing a filter or adding a new recipe.</p>
         <Button onClick={onClear} variant="outline" className="mt-4">Clear filters</Button>
       </div>
     );
   }
   return (
-    <div className="text-center py-16">
-      <h2 className="font-display text-xl font-semibold">Your recipe library is empty.</h2>
-      <p className="text-muted-foreground mt-2 text-sm">Add your first recipe to start planning meals, or we'll seed a starter library for you.</p>
-      <Button onClick={onAdd} className="mt-4">Add a recipe</Button>
+    <div className="rounded-2xl bg-pinch-ink text-pinch-milk p-12 text-center mt-4">
+      <img src="/brand/pinch-wordmark-dark.svg" alt="pinch" className="h-8 mx-auto mb-6" />
+      <h2 className="font-medium text-2xl leading-tight" style={{ letterSpacing: '-0.04em' }}>your recipe library is empty.</h2>
+      <p className="text-pinch-milk/70 mt-3 text-sm leading-relaxed">
+        a meal planner that doesn't take itself seriously.<br />
+        <span style={{ color: '#FF2D87' }}>(it does take your protein seriously.)</span>
+      </p>
+      <Button
+        onClick={onAdd}
+        className="mt-8 bg-pinch-hot-pink text-pinch-ink hover:bg-pinch-hot-pink/90 border-0"
+      >
+        Add a recipe
+      </Button>
     </div>
   );
 }

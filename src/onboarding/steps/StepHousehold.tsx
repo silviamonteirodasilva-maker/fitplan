@@ -44,7 +44,7 @@ export function StepHousehold({ state, onChangeName, onChangeSize, onNext, onBac
               type="button"
               onClick={() => onChangeSize(n)}
               className={cn(
-                "h-14 rounded-xl border-2 font-display text-lg font-semibold transition-all",
+                "h-14 rounded-xl border-2 text-lg font-semibold transition-all",
                 state.household.size === n
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-card hover:border-primary/60"
